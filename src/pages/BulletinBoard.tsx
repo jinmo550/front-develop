@@ -1,5 +1,5 @@
 // 게시판 페이지
-import "../style/bulletinboard.css";
+import "../styles/bulletinboard.css";
 
 const BulletinBoard = () => {
   return <div>BulletinBoard</div>;

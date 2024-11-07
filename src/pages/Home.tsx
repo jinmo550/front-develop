@@ -1,5 +1,5 @@
 // 홈 페이지
-import "../style/home.css";
+import "../styles/home.css";
 
 const Home = () => {
   return <div>Home</div>;
