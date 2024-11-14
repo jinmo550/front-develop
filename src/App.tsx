@@ -8,7 +8,8 @@ import {
 import Home from "./pages/Home";
 import BulletinBoard from "./pages/BulletinBoard";
 import Introduction from "./pages/Introduction";
-import LocalSemester from "./pages/LocalSemester";
+import LocalSemester from "./pages/LocalSemester/LocalSemester";
+import Semester_create from "./pages/LocalSemester/Semester_create";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/bulletinBoard" element={<BulletinBoard />} />
           <Route path="/introduction" element={<Introduction />} />
           <Route path="/localSemester" element={<LocalSemester />} />
+          <Route path="/Semester-create" element={<Semester_create />} />
         </Routes>
       </Router>
     </div>
