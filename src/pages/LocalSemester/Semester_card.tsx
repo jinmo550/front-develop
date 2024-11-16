@@ -6,6 +6,24 @@ interface SemesterCardProps {
 
 const Semester_card:React.FC<SemesterCardProps> = ({data}) => {
 
+  function onClickPatch(){
+    fetch('http://localhost:3001/local-semester',{
+      method: "Patch",
+      headers: {
+        "Content-Type": "application/json",},
+      body:JSON.stringify(data.id)
+      });
+  }
+
+console.log(data.id);
+
+  function onClickDelete(){
+    fetch('http://localhost:3001/local-semester/'+data.id,{
+      method: "Delete",
+      });
+  }
+
+
   return (
     <div className="  p-4 bg-gray-200 border border-black rounded-lg ml-12">
       {/* 제목 */}
@@ -32,8 +50,14 @@ const Semester_card:React.FC<SemesterCardProps> = ({data}) => {
     </div>
 
 
-    <div className="flex justify-end mt-2 ">
+    <div className="flex justify-end mt-2  ">
+    <button className="transition  delay-150 bg-gray-400 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 px-4 py-1 text-black rounded-lg "
+      onClick={onClickDelete}
+      >
+        삭제
+      </button>
       <button className="transition  delay-150 bg-gray-400 hover:-translate-y-1 hover:scale-110 hover:bg-indigo-500 duration-300 px-4 py-1 text-black rounded-lg "
+      onClick={onClickPatch}
       >
         수정
       </button>
