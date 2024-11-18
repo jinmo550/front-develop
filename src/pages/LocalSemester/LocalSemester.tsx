@@ -16,6 +16,7 @@ const LocalSemester = () => {
 
   const [data,setData] = useState<Semester[]>([]);
 
+
   useEffect(()=>{
     fetch('http://localhost:3001/local-semester',{
       method: "GET",
@@ -25,8 +26,17 @@ const LocalSemester = () => {
       .then((r) => r.json()) 
       .then((d) => {
         setData(d);
+
       })
   },[])
+
+  console.log(data);
+
+  const handleDelete = (id:string)=>{
+    setData((prevSemesters) => prevSemesters.filter((item) =>item.id !==id))
+  }   //setData 에서 내가 삭제버튼을 누르면 data에서 해당 id를 삭제하겠다.
+ 
+  
 
 
 
@@ -41,19 +51,18 @@ const LocalSemester = () => {
       </div>
 
 
-      <div className="p-2 flex flex-row-reverse">
-        <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded"
-        onClick={()=>{navigate("/Semester-create")}}
-        >
-          글쓰기
-          </button>
-      </div>
+      <div className="p-2 fixed bottom-4 right-4">
+  <button className="bg-gray-400 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded"
+    onClick={() => { navigate("/Semester-create"); }}>
+    글쓰기
+  </button>
+</div>
 
 
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap gap-16 w-full justify-center items-center">
         {
           data.map(function(item){
-              return <Semester_card data={item} key={item.id}/>
+              return <Semester_card data={item} onDelete={handleDelete}  key={item.id}/>
           })
         }
         
