@@ -2,32 +2,36 @@
 import "../styles/introduction.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
 
-const CardContainer = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 16px;
-`;
-
-const Card = styled.div<{ width: number }>`
-  width: ${(props) => props.width}%;
-  background-color: #f3f3f3;
-  padding: 16px;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-`;
+// id, name, age, major, hitokoto, image
 
 const Introduction = () => {
-  const [cards, setCards] = useState([1, 2, 3, 4, 5]); // 초기 카드 데이터
-  const [width, setWidth] = useState<number>(100 / cards.length); // 초기 너비 계산
-  const navigate = useNavigate();
+  const [teamMembers, setTeamMembers] = useState([]);
 
   useEffect(() => {
-    setWidth(100 / cards.length);
-  }, [cards.length]);
+    // 유저 정보 불러오기
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch(`localhost:3000/team-members`, {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        setTeamMembers((prev) => [...prev, data]);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
+
+  const navigate = useNavigate();
+  // const [id, setId] = useState("");
 
   const onClick0 = () => {
     navigate("/home");
@@ -44,6 +48,11 @@ const Introduction = () => {
   const onClick3 = () => {
     navigate("/bulletinBoard");
   };
+
+  const onClickProfile = (pram: string) => {
+    navigate("/introduction_description", { state: pram });
+  };
+
   return (
     <div className="introduction">
       Introduction
@@ -52,13 +61,29 @@ const Introduction = () => {
       <button onClick={onClick2}>현지학기</button>
       <button onClick={onClick3}>게시판</button>
       <div className="wrap-my-content">
-        <CardContainer>
-          {cards.map((card, index) => (
-            <Card key={index} width={width}>
-              Card {card}
-            </Card>
-          ))}
-        </CardContainer>
+        {TeamMember.map((item, index) => {
+          return (
+            <div
+              className="one-card"
+              key={index}
+              style={{
+                backgroundImage: "url(" + item.image + ")",
+              }}
+              onClick={() => {
+                onClickProfile(item.name);
+              }}
+            >
+              <div className="overlay">
+                <div className="content">
+                  <h2 className="member-name">{item.name}</h2>
+                  <p className="member-age">{item.age}세</p>
+                  <p className="member-major">{item.major}</p>
+                  <p className="member-hitokoto">「{item.hitokoto}」</p>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
