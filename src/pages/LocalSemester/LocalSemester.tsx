@@ -8,7 +8,7 @@ export interface Semester{
   id:string,
   title:string,
   content:string,
-  imageUrl:string,
+  imageUrl:string[],
 }
 
 const LocalSemester = () => {
@@ -26,19 +26,14 @@ const LocalSemester = () => {
       .then((r) => r.json()) 
       .then((d) => {
         setData(d);
-
       })
   },[])
 
-  console.log(data);
 
-  const handleDelete = (id:string)=>{
-    setData((prevSemesters) => prevSemesters.filter((item) =>item.id !==id))
-  }   //setData 에서 내가 삭제버튼을 누르면 data에서 해당 id를 삭제하겠다.
- 
+
+
   
-
-
+  
 
   return (
     <div className="local-semester">
@@ -59,14 +54,15 @@ const LocalSemester = () => {
 </div>
 
 
-      <div className="flex flex-wrap gap-16 w-full justify-center items-center">
-        {
-          data.map(function(item){
-              return <Semester_card data={item} onDelete={handleDelete}  key={item.id}/>
-          })
-        }
-        
+<div className="flex flex-wrap gap-8 w-full justify-center items-center">
+  {
+    data.map((item) => (
+      <div key={item.id} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
+        <Semester_card data={item}  />
       </div>
+    ))
+  }
+</div>
     </div>
   );
 };
