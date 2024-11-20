@@ -2,10 +2,9 @@
   overflow: hidden;
 }
 
-.wrap-my-content {
+.introduction .wrap-my-content {
   display: flex;
   justify-content: center;
-  background-color: white;
   width: 90%;
   height: 90vh;
   margin-left: auto;
@@ -13,9 +12,10 @@
   padding: 0;
   color: black;
   box-sizing: border-box;
+  transition: 0.2s cubic-bezier(0.3, 0, 0, 0.3);
 }
 
-.one-card {
+.introduction .one-card {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +81,7 @@
   opacity: 0;
 }
 
-.one-card .content .member-hitokoto {
+.one-card .content .member-content {
   font-size: 1.5rem;
   font-weight: 700;
   color: #000;

@@ -10,6 +10,7 @@ import BulletinBoard from "./pages/BulletinBoard";
 import Introduction from "./pages/Introduction";
 import IntroductionDescription from "./pages/introduction/IntroductionDescription";
 import LocalSemester from "./pages/LocalSemester";
+import CreateMember from "./pages/introduction/CreateMember";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             path="/introduction_description"
             element={<IntroductionDescription />}
           ></Route>
+          <Route path="/create-member" element={<CreateMember />} />
           <Route path="/localSemester" element={<LocalSemester />} />
         </Routes>
       </Router>
