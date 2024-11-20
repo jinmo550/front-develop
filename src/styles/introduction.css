@@ -87,3 +87,10 @@
   color: #000;
   opacity: 0;
 }
+
+.button-group .add-button {
+  position: fixed;
+  top: 90%;
+  left: 90%;
+  z-index: 10;
+}

@@ -78,7 +78,9 @@ const Introduction = () => {
       <button onClick={onClick2}>현지학기</button>
       <button onClick={onClick3}>게시판</button>
       <div className="button-group">
-        <button onClick={onClickAdd}>추가</button>
+        <button className="add-button" onClick={onClickAdd}>
+          추가
+        </button>
       </div>
       <div className="wrap-my-content">
         {teamMembers.map((item) => (

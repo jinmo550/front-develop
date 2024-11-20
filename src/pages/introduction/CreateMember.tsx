@@ -11,20 +11,31 @@ const CreateMember = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const navigate = useNavigate();
 
+  // 수정
+  // useCallback을 사용하여 함수를 캐싱
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setTeamMember({
       ...teamMember,
+      // teamMember 객체의 name 프로퍼티에 value 할당 ( age는 숫자로 변환 )
       [name]: name === "age" ? Number(value) : value,
     });
   };
 
+  // 숫자만 입력하게 막기
+  const getNumberOnly = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    const input = event.target as HTMLInputElement;
+    input.value = input.value.replace(/[^0-9]/g, "");
+  };
+
+  // 사진 업로드
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setSelectedFile(e.target.files[0]);
     }
   };
 
+  // POST 요청
   const onClickAdd = async () => {
     const formData = new FormData();
 
@@ -83,7 +94,9 @@ const CreateMember = () => {
           className="one-card"
           style={{
             backgroundImage: `url("${
-              selectedFile ? URL.createObjectURL(selectedFile) : ""
+              selectedFile
+                ? URL.createObjectURL(selectedFile)
+                : "/images/test.jpg"
             }")`,
           }}
         >
@@ -111,7 +124,17 @@ const CreateMember = () => {
           </div>
           <div className="one-input">
             <h1>나이</h1>
-            <input type="text" name="age" onChange={handleInputChange} />
+            <input
+              type="text"
+              name="age"
+              placeholder="0"
+              defaultValue={0}
+              onKeyDown={getNumberOnly}
+              onChange={handleInputChange}
+            />
+            <p style={{ marginLeft: "2%", fontSize: "1rem" }}>
+              ※ 0은 비밀로 표시됩니다.
+            </p>
           </div>
           <div className="one-input">
             <h1>전공</h1>
