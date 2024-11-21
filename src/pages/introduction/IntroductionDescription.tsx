@@ -101,7 +101,7 @@ const IntroductionDescription = () => {
 
       if (selectedFile) {
         formData.append("files", selectedFile);
-      } else if (teamMember.imageUrl[0]) {
+      } else {
         formData.append("files", teamMember.imageUrl[0]);
       }
 
