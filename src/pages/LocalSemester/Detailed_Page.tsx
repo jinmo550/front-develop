@@ -1,41 +1,40 @@
 import { useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-
-export interface Semester{
-  id:string,
-  title:string,
-  content:string,
-  imageUrl:string[],
-}
+import { Semester } from "./LocalSemester";
 
 
 const Detailed_Page = () => {
-  const navigate =useNavigate()
+  const navigate =useNavigate();
   const location= useLocation();
-  const id = location.state.id
-  const [data,setData] = useState<Semester>();
+  const id = location.state.id;
+  const [data,setData] = useState<Semester>({
+    id:'',
+    title:'',
+    content:'',
+    imageUrl:[],
+  });
+  
 
 
 
-
-    useEffect(()=>{
-      fetch('http://localhost:3001/local-semester/'+id,{
-        method: "GET",
-        // headers: {
-        //   "Content-Type": "application/json",}
-        })
-        .then((r) => r.json()) 
-        .then((d) => {
-          setData(d);
-        })
+    useEffect (()=>{
+      const fetchData = async()=>{
+        const response= await fetch('http://localhost:3001/local-semester/'+id,{
+          method: "GET",
+          // headers: {
+          //   "Content-Type": "application/json",}
+          })
+          const data = await response.json();
+          console.log(data);
+          setData(data);
+      } 
+      fetchData();
     },[id])
 
 
-
-
-  // function onClickPatch(){
-      
-  // }
+  function onClickupdate(){
+       navigate('/Update_Page',{state:{id:data.id}})
+  }
 
   function onClickDelete(){
     fetch('http://localhost:3001/local-semester/'+id,{
@@ -52,7 +51,7 @@ const Detailed_Page = () => {
   <div className="max-w-4xl w-full p-6 bg-white border rounded-lg shadow-lg">
     {/* 제목 */}
     <div className="text-2xl font-semibold text-gray-800 border-b pb-4 mb-4">
-      {data?.title}
+      {data.title}
     </div>
 
     {/* 글쓴이 */}
@@ -63,7 +62,7 @@ const Detailed_Page = () => {
 
     {/* 이미지 */}
     <div className="mb-6">
-      {data?.imageUrl && data.imageUrl.length > 0 ? (
+      {data.imageUrl && data.imageUrl.length > 0 ? (
         data.imageUrl.map((file, index) => (
           <div className="flex justify-center mb-4" key={index}>
             <img
@@ -80,7 +79,7 @@ const Detailed_Page = () => {
 
     {/* 본문 내용 */}
     <div className="text-lg text-gray-800 mb-8">
-      {data?.content}
+      {data.content}
     </div>
 
     {/* 버튼들 */}
@@ -93,12 +92,15 @@ const Detailed_Page = () => {
       </button>
       <button
         className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
-        // onClick={onClickPatch}
+        onClick={onClickupdate}
       >
         수정
       </button>
     </div>
   </div>
+
+
+  
 </div>
 
 

@@ -1,40 +1,35 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-interface Datastate{
-  title:string,
-  content:string,
-  imageUrl:File[],
-}
+import { useLocation, useNavigate } from "react-router-dom"
+import { Semester } from "./LocalSemester";
+import { useEffect, useState } from "react";
 
 
-const Semester_create = () => {
-  const navigate=useNavigate()
-  const [data,setData] = useState<Datastate>({
+
+const Update_Page = () => {
+  const navigate =  useNavigate();
+  const location = useLocation();
+  const id = location.state.id
+  const [data,setData] = useState<Semester>({
+    id:'',
     title:'',
     content:'',
     imageUrl:[],
-  })
+  });
 
 
-  const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
-    const Files = e.target.files
-    console.log(Files);
-    if (Files){
-      setData((prevData)=>({
-        ...prevData,
-        imageUrl: Array.from(Files),  //Files 는 배열처럼 보이지만 배열이 아니라서 Array.from(Files)이렇게 해준다
-      }))
-    }
-  }
+  useEffect (()=>{
+    const fetchData = async()=>{
+      const response= await fetch('http://localhost:3001/local-semester/'+id,{
+        method: "GET",
+        // headers: {
+        //   "Content-Type": "application/json",}
+        })
+        const data = await response.json();
+        setData(data);
+    } 
+    fetchData();
+  },[id])
 
-  const onChangetext = (e: React.ChangeEvent<HTMLTextAreaElement>)=>{
-    const content = e.target.value
-    setData((prevData)=>({
-      ...prevData,
-      ['content']: content,
-    }))
-  } 
+
 
   const onChangetitle = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const title = e.target.value
@@ -44,29 +39,64 @@ const Semester_create = () => {
     }))
   }
 
-  const onClickPOST = ()=>{
-    const formdata = new FormData();
-    formdata.append('title',data.title)
-    formdata.append('content',data.content)
-    data.imageUrl.forEach((file)=>{
-      formdata.append('files',file)
-    })
-
-    
-
-
-    fetch('http://localhost:3001/local-semester',{
-      method:'POST',
-      body: formdata,
-    })
-    .then(r=>{
-      if(r.ok){
-        navigate('/localSemester')
-      }
-    })
+  const onChangetext = (e:React.ChangeEvent<HTMLTextAreaElement>)=>{
+    const content = e.target.value
+    setData((prevData)=>({
+      ...prevData,
+      ['content']: content
+    }))
+  }
+  
+  
+  const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    const Files = e.target.files
+    if (Files){
+      const newFiles = Array.from(Files).map((file) => URL.createObjectURL(file)); //File을 Object URL로 변환
+      setData((prevData)=>({
+        ...prevData,
+        ['imageUrl']:[...data.imageUrl,...newFiles]
+      }))
+    }
   }
 
 
+
+
+  const onClickimgDelete = (file:string)=>{
+    setData((prevData)=>({
+      ...prevData,
+      imageUrl:prevData.imageUrl.filter((item)=>item !== file),
+    }))
+    
+  }
+
+  const onClickPATCH = ()=>{
+    const formdata = new FormData();
+    if(data.title && data.content){
+      formdata.append('title',data.title)
+      formdata.append('content',data.content)
+    }else{
+      console.log('값이 없어요')
+    }
+
+    
+    data.imageUrl.forEach((file)=>{
+      formdata.append('files', file);
+    })
+
+      fetch('http://localhost:3001/local-semester/'+id,{
+        method: "PATCH",
+        body:formdata,
+      })
+      .then((r)=>{
+        if(r.ok){
+          console.log('요청완료');
+        }
+      })
+      .then((respones)=>{
+        navigate('/LocalSemester')
+      })
+  }
 
 
   return (
@@ -79,7 +109,8 @@ const Semester_create = () => {
         <input
           type="text"
           className="ml-4 flex-1 border border-gray-300 bg-gray-100 px-4 py-2 text-black rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          name="title"
+          name="title" 
+          value={data.title}
           onChange={onChangetitle}
         />
       </div>
@@ -100,17 +131,16 @@ const Semester_create = () => {
         <label htmlFor="file_input" className="block font-semibold text-black mb-2">이미지</label>
         <input
           className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none"
-          id="file_input"
           type="file"
           multiple
           onChange={handleImageChange}
         />
         <div className="mt-4 grid grid-cols-3 gap-4">
           {data.imageUrl.map((file, index) => {
-            const imageUrl = URL.createObjectURL(file);
             return (
-              <div className="flex justify-center" key={index}>
-                <img src={imageUrl} className="object-contain max-w-full max-h-40 rounded-md" alt={`img-${index}`} />
+              <div className="flex justify-center" key={index} >
+                <img src={file} className="object-contain max-w-full max-h-40 rounded-md"  
+                onClick={()=>{onClickimgDelete(file)}} />
               </div>
             );
           })}
@@ -123,6 +153,7 @@ const Semester_create = () => {
         <textarea
           id="input"
           name="content"
+          value={data.content}
           className="block w-full h-40 p-4 text-black border border-gray-300 rounded-lg bg-gray-100 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           onChange={onChangetext}
         />
@@ -132,15 +163,17 @@ const Semester_create = () => {
       <div className="flex items-center flex-row-reverse p-2">
         <button
           className="ml-2 bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 transition duration-200 ease-in-out"
-          onClick={onClickPOST}
+          onClick={onClickPATCH}
         >
           저장
         </button>
       </div>
     </div>
-  </div>
-  
+    </div>
+
+
+    
   )
 }
 
-export default Semester_create
+export default Update_Page
