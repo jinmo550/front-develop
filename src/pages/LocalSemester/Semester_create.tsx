@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../Context/useUser";
 
 interface Datastate{
   title:string,
@@ -15,7 +16,7 @@ const Semester_create = () => {
     content:'',
     imageUrl:[],
   })
-
+  const {userName} = useUser();
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const Files = e.target.files
@@ -49,7 +50,7 @@ const Semester_create = () => {
     formdata.append('title',data.title)
     formdata.append('content',data.content)
     data.imageUrl.forEach((file)=>{
-      formdata.append('files',file)
+      formdata.append('imageUrl',file)
     })
 
     
@@ -90,7 +91,7 @@ const Semester_create = () => {
         <input
           type="text"
           className="ml-4 flex-1 border border-gray-300 bg-gray-100 px-4 py-2 text-black rounded-md focus:outline-none"
-          value=""
+          value={userName || ''}
           readOnly
         />
       </div>

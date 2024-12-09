@@ -12,7 +12,8 @@ const Update_Page = () => {
     id:'',
     title:'',
     content:'',
-    imageUrl:[],
+    imageUrl:[], // 기존 URL
+    newFile:[], //새로 추가된 파일
   });
 
 
@@ -54,7 +55,7 @@ const Update_Page = () => {
       const newFiles = Array.from(Files).map((file) => URL.createObjectURL(file)); //File을 Object URL로 변환
       setData((prevData)=>({
         ...prevData,
-        ['imageUrl']:[...data.imageUrl,...newFiles]
+        newFile:Array.from(Files)
       }))
     }
   }
@@ -79,10 +80,18 @@ const Update_Page = () => {
       console.log('값이 없어요')
     }
 
-    
-    data.imageUrl.forEach((file)=>{
-      formdata.append('files', file);
-    })
+    // 기존 url 
+    if(data.imageUrl){
+      data.imageUrl.forEach((file)=>{
+        formdata.append('existingImageUrls',file)
+      })
+    }
+    // 새파일 
+    if(data.newFile){
+      data.newFile.forEach((file)=>{
+        formdata.append('imageUrl',file)
+      })
+    }
 
       fetch('http://localhost:3001/local-semester/'+id,{
         method: "PATCH",

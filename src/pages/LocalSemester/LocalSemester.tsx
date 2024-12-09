@@ -8,7 +8,8 @@ export interface Semester{
   id:string,
   title:string,
   content:string,
-  imageUrl:string[],
+  imageUrl:File[],
+  newFile:File[]
 }
 
 const LocalSemester = () => {
@@ -29,8 +30,7 @@ const LocalSemester = () => {
       })
   },[])
 
-
-
+  
 
   
   
