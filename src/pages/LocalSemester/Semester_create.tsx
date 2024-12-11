@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../../Context/useUser";
 
 interface Datastate{
   title:string,
@@ -10,17 +9,23 @@ interface Datastate{
 
 
 const Semester_create = () => {
-  const navigate=useNavigate()
+  const [token,setToken] = useState<string|null>('');
+  const navigate=useNavigate();
   const [data,setData] = useState<Datastate>({
     title:'',
     content:'',
     imageUrl:[],
-  })
-  const {userName} = useUser();
+  });
+  
+useEffect(()=>{
+  const usertoken:string|null = localStorage.getItem('access_token')
+  
+
+  setToken(usertoken)
+},[])
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const Files = e.target.files
-    console.log(Files);
     if (Files){
       setData((prevData)=>({
         ...prevData,
@@ -53,11 +58,13 @@ const Semester_create = () => {
       formdata.append('imageUrl',file)
     })
 
-    
+
 
 
     fetch('http://localhost:3001/local-semester',{
       method:'POST',
+      headers: { 'Authorization': `Bearer ${token}`, // 여기서 yourToken은 실제 토큰 값입니다. 
+      },
       body: formdata,
     })
     .then(r=>{
@@ -91,7 +98,7 @@ const Semester_create = () => {
         <input
           type="text"
           className="ml-4 flex-1 border border-gray-300 bg-gray-100 px-4 py-2 text-black rounded-md focus:outline-none"
-          value={userName || ''}
+          
           readOnly
         />
       </div>

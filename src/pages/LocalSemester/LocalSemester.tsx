@@ -9,7 +9,7 @@ export interface Semester{
   title:string,
   content:string,
   imageUrl:File[],
-  newFile:File[]
+  newFile:File[],
 }
 
 const LocalSemester = () => {
@@ -26,13 +26,10 @@ const LocalSemester = () => {
       })
       .then((r) => r.json()) 
       .then((d) => {
-        setData(d);
+          setData(d);
       })
   },[])
 
-  
-
-  
   
 
   return (

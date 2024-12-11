@@ -1,20 +1,31 @@
 
 import { useNavigate } from 'react-router-dom';
-import { useUser } from './Context/useUser';
 
 const Navbar = () => {
   const navigate = useNavigate()
-  const { userName,setUserName } = useUser();
 
-
-  const handleLogout = () => {
-    navigate("/login");
+  
+  const handleLogin = () => {
+    navigate('/login');
   };
 
-  const handleLogin = ()=>{
-    localStorage.removeItem('access_token');
-    setUserName(null)
-  }
+  const handleLogout = () => {
+    // 로컬 스토리지 삭제
+    localStorage.clear();
+  
+    // 세션 스토리지 삭제
+    sessionStorage.clear();
+  
+    // 쿠키 삭제
+    document.cookie.split(";").forEach(cookie => {
+      const eqPos = cookie.indexOf("=");
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    });
+  
+    // 상태 초기화 (유저 정보 초기화)
+  };
+  
 
   return (
   
@@ -25,22 +36,7 @@ const Navbar = () => {
         <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">5조</span>
       </a>
       <div className="flex items-center space-x-14 ">
-  <p className="text-white">{userName}님 안녕하세요.</p>
-  {userName ? (
-    <button 
-      onClick={handleLogout} 
-      className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-blue-300 transform transition-all hover:scale-110"
-    >
-      로그아웃
-    </button>
-  ) : (
-    <button 
-      onClick={handleLogin} 
-      className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-blue-300 transform transition-all hover:scale-110"
-    >
-      로그인
-    </button>
-  )}
+  <p className="text-white">님 안녕하세요.</p>
 </div>
     </div>
   </nav>

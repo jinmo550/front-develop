@@ -12,8 +12,10 @@ const Detailed_Page = () => {
     title:'',
     content:'',
     imageUrl:[],
+    newFile:[],
   });
   
+
 
 
 
@@ -25,7 +27,6 @@ const Detailed_Page = () => {
           //   "Content-Type": "application/json",}
           })
           const data = await response.json();
-          console.log(data);
           setData(data);
       } 
       fetchData();
@@ -56,7 +57,7 @@ const Detailed_Page = () => {
 
     {/* 글쓴이 */}
     <div className="flex justify-between items-center mb-6 text-gray-600">
-      <div className="text-sm">작성자: <span className="font-medium">홍길동</span></div>
+      <div className="text-sm">작성자: <span className="font-medium"></span></div>
      
     </div>
 

@@ -63,7 +63,7 @@ const Update_Page = () => {
 
 
 
-  const onClickimgDelete = (file:string)=>{
+  const onClickimgDelete = (file:File)=>{
     setData((prevData)=>({
       ...prevData,
       imageUrl:prevData.imageUrl.filter((item)=>item !== file),

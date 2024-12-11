@@ -1,11 +1,9 @@
 // 홈 페이지
-import { useUser } from "../Context/useUser";
 import "../styles/home.css";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const navigate = useNavigate();
-  const { userName,setUserName } = useUser();    
+  const navigate = useNavigate(); 
 
 
   const onClick0 = () => {
@@ -30,7 +28,6 @@ const Home = () => {
   
   const logout = ()=>{
     localStorage.removeItem('access_token');
-    setUserName(null)
   }
 
   return (
@@ -42,13 +39,6 @@ const Home = () => {
         <button className="text-white" onClick={onClick2}>현지학기</button>
         <button className="text-white" onClick={onClick3}>게시판</button>
         
-      </div>
-      <div className="container">
-        {
-          userName?<button className="text-white " onClick={logout}>로그아웃</button>
-          :<button className="text-white " onClick={onClick4}>로그인</button>
-        }
-      <p className="text-white">{userName}</p>
       </div>
       
     </div>

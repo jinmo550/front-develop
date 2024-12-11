@@ -1,7 +1,6 @@
 import {jwtDecode}  from "jwt-decode"
 import { FormEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { useUser } from "../../Context/useUser"
 
 
 const Login = () => {
@@ -9,8 +8,7 @@ const Login = () => {
   const [users,setUsers] = useState({
     email:'',
     password:''
-  })
-  const { setUserName } = useUser();    
+  })   
 
   const onchange=(e:React.ChangeEvent<HTMLInputElement>)=>{
     const name = e.target.name
@@ -44,7 +42,6 @@ const Login = () => {
         localStorage.setItem('access_token',data.access_token)
         const Token:any = jwtDecode(data.access_token);
         console.log(Token);
-        setUserName(Token.name); 
         navigate('/');
       }else{
         throw new Error('로그인 실패')

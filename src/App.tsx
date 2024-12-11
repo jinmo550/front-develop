@@ -14,7 +14,6 @@ import Detailed_Page from "./pages/LocalSemester/Detailed_Page";
 import Update_Page from "./pages/LocalSemester/Update_Page";
 import Login from "./pages/Login/Login";
 import Sign_up from "./pages/Login/Sign_up";
-import { UserProvider } from "./Context/UserProvider";
 import Navbar from "./Navbar";
 
 
@@ -23,7 +22,6 @@ function App() {
 
   return (
     <div className="app">
-      <UserProvider>
         <Router>
         <Navbar/>
           <Routes>
@@ -42,7 +40,6 @@ function App() {
             <Route path="/Sign_up" element={<Sign_up />} />
           </Routes>
         </Router>
-    </UserProvider>
     </div>
   );
 }
