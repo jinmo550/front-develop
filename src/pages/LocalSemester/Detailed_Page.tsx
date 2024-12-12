@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Semester } from "./LocalSemester";
 
 
+
 const Detailed_Page = () => {
   const navigate =useNavigate();
   const location= useLocation();
@@ -13,6 +14,8 @@ const Detailed_Page = () => {
     content:'',
     imageUrl:[],
     newFile:[],
+    createdAt:'',
+    user:{'id':'','name':''}
   });
   
 
@@ -57,7 +60,7 @@ const Detailed_Page = () => {
 
     {/* 글쓴이 */}
     <div className="flex justify-between items-center mb-6 text-gray-600">
-      <div className="text-sm">작성자: <span className="font-medium"></span></div>
+      <div className="text-sm">작성자: <span className="font-medium">{data.user?.name}</span></div>
      
     </div>
 

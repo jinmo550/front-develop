@@ -8,7 +8,8 @@ const Login = () => {
   const [users,setUsers] = useState({
     email:'',
     password:''
-  })   
+  })  
+  
 
   const onchange=(e:React.ChangeEvent<HTMLInputElement>)=>{
     const name = e.target.name
@@ -42,6 +43,7 @@ const Login = () => {
         localStorage.setItem('access_token',data.access_token)
         const Token:any = jwtDecode(data.access_token);
         console.log(Token);
+        localStorage.setItem('user',Token)
         navigate('/');
       }else{
         throw new Error('로그인 실패')

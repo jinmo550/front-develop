@@ -4,17 +4,23 @@ import { useNavigate } from "react-router-dom";
 import Semester_card from "./Semester_card";
 import { useEffect, useState } from "react";
 
+
+
 export interface Semester{
   id:string,
   title:string,
   content:string,
   imageUrl:File[],
   newFile:File[],
+  createdAt:string,
+  user:{
+    'id':string;
+    'name':string;
+  },
 }
 
 const LocalSemester = () => {
   const navigate = useNavigate();
-
   const [data,setData] = useState<Semester[]>([]);
 
 
@@ -27,10 +33,12 @@ const LocalSemester = () => {
       .then((r) => r.json()) 
       .then((d) => {
           setData(d);
+          // 내림차순 정렬 (최신 날짜가 첫 번째에 위치)
+          data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
       })
   },[])
 
-  
+  console.log(data);
 
   return (
     <div className="local-semester">

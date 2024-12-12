@@ -1,4 +1,5 @@
-import { useEffect, useReducer, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useEffect,  useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Datastate{
@@ -9,7 +10,8 @@ interface Datastate{
 
 
 const Semester_create = () => {
-  const [token,setToken] = useState<string|null>('');
+  const [token,setToken] = useState<any>();
+  const [user,setUser] = useState<any>('');
   const navigate=useNavigate();
   const [data,setData] = useState<Datastate>({
     title:'',
@@ -18,11 +20,13 @@ const Semester_create = () => {
   });
   
 useEffect(()=>{
-  const usertoken:string|null = localStorage.getItem('access_token')
-  
-
+  const usertoken:any = localStorage.getItem('access_token')
+  const user = jwtDecode(usertoken)
+  setUser(user)
   setToken(usertoken)
+
 },[])
+
 
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const Files = e.target.files
@@ -50,6 +54,16 @@ useEffect(()=>{
     }))
   }
 
+  const onClickimgDelete = (file:File)=>{
+    setData((prevData)=>({
+      ...prevData,
+      imageUrl:prevData.imageUrl.filter((item)=>item !== file)
+
+    }))
+
+  }
+
+
   const onClickPOST = ()=>{
     const formdata = new FormData();
     formdata.append('title',data.title)
@@ -57,9 +71,6 @@ useEffect(()=>{
     data.imageUrl.forEach((file)=>{
       formdata.append('imageUrl',file)
     })
-
-
-
 
     fetch('http://localhost:3001/local-semester',{
       method:'POST',
@@ -98,7 +109,7 @@ useEffect(()=>{
         <input
           type="text"
           className="ml-4 flex-1 border border-gray-300 bg-gray-100 px-4 py-2 text-black rounded-md focus:outline-none"
-          
+          value={user.name||''}
           readOnly
         />
       </div>
@@ -118,7 +129,9 @@ useEffect(()=>{
             const imageUrl = URL.createObjectURL(file);
             return (
               <div className="flex justify-center" key={index}>
-                <img src={imageUrl} className="object-contain max-w-full max-h-40 rounded-md" alt={`img-${index}`} />
+                <img src={imageUrl} className="object-contain max-w-full max-h-40 rounded-md" alt={`img-${index}`} 
+                onClick={()=>{onClickimgDelete(file)}}
+                />
               </div>
             );
           })}

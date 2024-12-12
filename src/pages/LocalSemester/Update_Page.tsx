@@ -2,7 +2,10 @@ import { useLocation, useNavigate } from "react-router-dom"
 import { Semester } from "./LocalSemester";
 import { useEffect, useState } from "react";
 
-
+export interface User{
+  id:string;
+  name:string;
+}
 
 const Update_Page = () => {
   const navigate =  useNavigate();
@@ -14,6 +17,8 @@ const Update_Page = () => {
     content:'',
     imageUrl:[], // 기존 URL
     newFile:[], //새로 추가된 파일
+    createdAt:'',
+    user:{'id':'','name':''},
   });
 
 
@@ -52,7 +57,6 @@ const Update_Page = () => {
   const handleImageChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
     const Files = e.target.files
     if (Files){
-      const newFiles = Array.from(Files).map((file) => URL.createObjectURL(file)); //File을 Object URL로 변환
       setData((prevData)=>({
         ...prevData,
         newFile:Array.from(Files)
@@ -60,15 +64,15 @@ const Update_Page = () => {
     }
   }
 
-
+console.log(data);
 
 
   const onClickimgDelete = (file:File)=>{
     setData((prevData)=>({
       ...prevData,
       imageUrl:prevData.imageUrl.filter((item)=>item !== file),
+      newFile:prevData.newFile.filter((item)=>item !== file),
     }))
-    
   }
 
   const onClickPATCH = ()=>{
@@ -153,6 +157,18 @@ const Update_Page = () => {
               </div>
             );
           })}
+
+          {
+            data.newFile && data.newFile.length>0 ? (data.newFile.map((file, index) => {
+              const imageUrl = URL.createObjectURL(file); 
+              return (
+                <div className="flex justify-center" key={index} >
+                  <img src={imageUrl} className="object-contain max-w-full max-h-40 rounded-md"  
+                  onClick={()=>{onClickimgDelete(file)}} />
+                </div>
+              );
+            })):(<div></div>) 
+          }
         </div>
       </div>
   
